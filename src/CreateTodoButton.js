@@ -1,9 +1,19 @@
-import react from "react";
+import React from 'react';
+import './CreateTodoButton.css';
 
-function CreateTodoButtom(props){
-    return(
-        <button>+</button>
-    );
+function CreateTodoButton(props) {
+
+  const onClickButton = (msg) => {
+    alert('msg')
+  }
+
+  return (
+    <button className="CreateTodoButton"
+      onClick={() => onClickButton('Modal')}
+    >
+      +
+    </button>
+  );
 }
 
-export { CreateTodoButtom};
+export { CreateTodoButton };
