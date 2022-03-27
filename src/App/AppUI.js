@@ -13,12 +13,15 @@ function AppUI({
     searchedTodos,
     completeTodo,
     deleteTodo,
+    loading,
+    error,
+    
 }) {
     return (
         <React.Fragment>
             <TodoCounter // enviamos las propiedades de arriba ☝
                 total={total}
-                completed={completed}           
+                completed={completed}
             />
             <TodoSearch
                 searchValue={searchValue} // hacemos referencia a las consts de arriba ☝
@@ -26,6 +29,11 @@ function AppUI({
             />
 
             <TodoList>
+
+                {loading && <p>Loading...</p>}
+                {error && <p>Error</p>}
+                {(!loading && !searchedTodos.length) && <p>No hay resultados, crea tu primer Todo!</p>}
+
                 {searchedTodos.map(todo => ( // no iteramos en el array estatico sino en el que viene de la condición si escribieron
                     <TodoItem
                         key={todo.text}
@@ -33,7 +41,7 @@ function AppUI({
                         completed={todo.completed}
                         onComplete={() => completeTodo(todo.text)}
                         onDelete={() => deleteTodo(todo.text)}
-                       
+
                     />
                 ))}
             </TodoList>

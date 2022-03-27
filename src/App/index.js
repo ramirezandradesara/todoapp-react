@@ -10,38 +10,59 @@ import { AppUI } from './AppUI';
 
 /* ------------------------ ALMACENAR EN localStorage ----------------------- */
 function useLocalStorage(itemName, initialValue) { // custom hook, avisa a react que debe hacer un nuevo render
+  const [error, setError] = React.useState(false); // estado de carga
+  const [loading, setLoading] = React.useState(true); // estado de carga
+  const [item, setItem] = React.useState(initialValue) // guardamos en el estado
 
-  const localStorageItem = localStorage.getItem(itemName); // traemos el elemento del parametro
+  React.useEffect(() => {
+    setTimeout(() => {
+      try {
+        const localStorageItem = localStorage.getItem(itemName); // traemos el elemento del parametro
 
-  let parsedItem; // está todo los todos del localStorage
+        let parsedItem; // está todo los todos del localStorage
 
-  if (!localStorageItem) { // sino hay nada en localStorage, lo creamos. Si hay algo, paseamos lo que vino como parametro
-    localStorage.setItem(itemName, JSON.stringify(initialValue))
-    parsedItem = initialValue;
-  } else {
-    parsedItem = JSON.parse(localStorageItem)
-  }
+        if (!localStorageItem) { // sino hay nada en localStorage, lo creamos. Si hay algo, paseamos lo que vino como parametro
+          localStorage.setItem(itemName, JSON.stringify(initialValue))
+          parsedItem = initialValue;
+        } else {
+          parsedItem = JSON.parse(localStorageItem)
+        }
+        setItem(parsedItem)
+        setLoading(false)
+      } catch (error) {
+        setError(error)
+      }
+    }, 2000); // para que no se ejecute el setState antes de que el componente se renderize 
+  });
+
 
   /* ---------- guardamos tanto en el estado como en el localStorage ---------- */
 
-  const [item, setItem] = React.useState(parsedItem) // guardamos en el estado
 
   const saveItem = (newItem) => { // guardamos en localStorage 
-    const stringifiedItem = JSON.stringify(newItem)
-    localStorage.setItem(itemName, stringifiedItem)
+    try {
+      const stringifiedItem = JSON.stringify(newItem)
+      localStorage.setItem(itemName, stringifiedItem)
+      setItem(newItem) // actualiza desde React
 
-    setItem(newItem) // actualiza desde React
+    } catch (error) {
+      setError(error)
+    }
   }
 
-  return [
+  return { // por convencion, si tenemos 2 estados enviamos un array, si es más de uno, enviamos un objeto
     item, // retornamos el estado
-    saveItem // retornamos la funcion para guardar en localStorage
-  ];
+    saveItem, // retornamos la funcion para guardar en localStorage
+    loading,
+    error
+  };
 }
 function App() {
 
   /* ------------------------- VARIABLES ------------------------- */
-  const [todos, saveTodos] = useLocalStorage('TODOS_V1', []) // usamos el hook, decimos donde guardar 
+  const { item: todos, saveItem: saveTodos, loading, error } = useLocalStorage('todos', []); // llamamos al custom hook
+
+  /*   const [todos, saveTodos] = useLocalStorage('TODOS_V1', []) // usamos el hook, decimos donde guardar  */
   const [searchValue, setSearchValue] = React.useState(''); // van a ser utilizados en la funcion TodoSearch
 
   const completedTodos = todos.filter(todo => !!todo.completed).length; // cant de ToDos completados, referencia del todos del estado
@@ -87,7 +108,7 @@ function App() {
         saveTodos   (newTodos);
       } 
    */
-  
+
   /* ------------------------------ ELIMINAR TODO ----------------------------- */
   const deleteTodo = (text) => {
     const todoIndex = todos.findIndex(todo => todo.text === text);
@@ -97,10 +118,13 @@ function App() {
     newTodos.splice(todoIndex, 1); // borra el ToDo en el que estamos
 
     saveTodos(newTodos); // React hace el rerender
-  }
+  };
+
 
   return (
     <AppUI
+      error={error}
+      loading={loading}
       total={totalTodos}
       completed={completedTodos}
       searchValue={searchValue} // hacemos referencia a las consts de arriba ☝
