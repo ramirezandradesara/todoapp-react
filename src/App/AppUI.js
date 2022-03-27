@@ -6,19 +6,19 @@ import { TodoItem } from '../TodoItem';
 import { CreateTodoButton } from '../CreateTodoButton'; // como no encuentra un archivo, buscar la carpeta llamada de esta manera. Y como no especificamos dentro de la carpeta que archivo, busca por defecto el llamado "index.js
 
 function AppUI({
-    totalTodos,
-    completedTodos,
+    total,
+    completed,
     searchValue,
     setSearchValue,
     searchedTodos,
     completeTodo,
-    deleteTodo 
+    deleteTodo,
 }) {
     return (
         <React.Fragment>
             <TodoCounter // enviamos las propiedades de arriba ☝
-                total={totalTodos}
-                completed={completedTodos}
+                total={total}
+                completed={completed}           
             />
             <TodoSearch
                 searchValue={searchValue} // hacemos referencia a las consts de arriba ☝
@@ -33,6 +33,7 @@ function AppUI({
                         completed={todo.completed}
                         onComplete={() => completeTodo(todo.text)}
                         onDelete={() => deleteTodo(todo.text)}
+                       
                     />
                 ))}
             </TodoList>

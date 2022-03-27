@@ -9,7 +9,7 @@ function CreateTodoButton(props) {
 
   return (
     <button className="CreateTodoButton"
-      onClick={() => onClickButton('Modal')}
+      onClick={() => onClickButton('Modal')} // mandamos la funcion en otra funcion 
     >
       +
     </button>

@@ -7,39 +7,48 @@ import { AppUI } from './AppUI';
   { text: 'LALALALAA', completed: true },
 ]; */
 
+
+/* ------------------------ ALMACENAR EN localStorage ----------------------- */
+function useLocalStorage(itemName, initialValue) { // custom hook, avisa a react que debe hacer un nuevo render
+
+  const localStorageItem = localStorage.getItem(itemName); // traemos el elemento del parametro
+
+  let parsedItem; // está todo los todos del localStorage
+
+  if (!localStorageItem) { // sino hay nada en localStorage, lo creamos. Si hay algo, paseamos lo que vino como parametro
+    localStorage.setItem(itemName, JSON.stringify(initialValue))
+    parsedItem = initialValue;
+  } else {
+    parsedItem = JSON.parse(localStorageItem)
+  }
+
+  /* ---------- guardamos tanto en el estado como en el localStorage ---------- */
+
+  const [item, setItem] = React.useState(parsedItem) // guardamos en el estado
+
+  const saveItem = (newItem) => { // guardamos en localStorage 
+    const stringifiedItem = JSON.stringify(newItem)
+    localStorage.setItem(itemName, stringifiedItem)
+
+    setItem(newItem) // actualiza desde React
+  }
+
+  return [
+    item, // retornamos el estado
+    saveItem // retornamos la funcion para guardar en localStorage
+  ];
+}
 function App() {
 
-  /* ------------------------ ALMACENAR EN localStorage ----------------------- */
-
-  const localStorageTodos = localStorage.getItem('TODOS_V1')
-  let parsedTodos; // está todo los todos del localStorage
-
-  if(!localStorageTodos){
-    localStorage.setItem('TODOS_V1', JSON.stringify([]))
-    parsedTodos = [];
-  }else{
-    parsedTodos = JSON.parse(localStorageTodos)// si hay todos en localStorage
-  }
-
-  // no guardamos solo en el estado local sino en localStorage
-  const saveTodos = (newTodos) =>{
-    const stringifiedTodos = JSON.stringify(newTodos)
-    localStorage.setItem('TODOS_V1', stringifiedTodos)
-
-    setTodos(newTodos) // actualiza desde React
-  }
-
-   /* ------------------------- Determinamos variables ------------------------- */
-
-  const [todos, setTodos] = React.useState(parsedTodos)
+  /* ------------------------- VARIABLES ------------------------- */
+  const [todos, saveTodos] = useLocalStorage('TODOS_V1', []) // usamos el hook, decimos donde guardar 
   const [searchValue, setSearchValue] = React.useState(''); // van a ser utilizados en la funcion TodoSearch
 
-  const completedTodos = todos.filter(todo => !!todo.completed).length; // cant de todos completados
+  const completedTodos = todos.filter(todo => !!todo.completed).length; // cant de ToDos completados, referencia del todos del estado
   const totalTodos = todos.length // cant de ToDos en total creados
 
 
   /* --------------------- FILTRAR TODOS SEGÚN TODOSEARCH -------------------- */
-
   let searchedTodos = [];
 
   if (!searchValue.length >= 1) {
@@ -68,16 +77,18 @@ function App() {
       completed: true,
     } */
   }
+
   /* ---------------------------- TOGGLE COMPLETADO --------------------------- */
 
-  /*   const toggleCompleteTodos = (text) => {
-      const todoIndex = todos.findIndex(todo => todo.text === text);
-      const newTodos = [...todos];
-      newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
-      setTodos(newTodos);
-    } */
-
-
+  /*     const toggleCompleteTodos = (text) => {
+        const todoIndex = todos.findIndex(todo => todo.text === text);
+        const newTodos = [...todos];
+        newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
+        saveTodos   (newTodos);
+      } 
+   */
+  
+  /* ------------------------------ ELIMINAR TODO ----------------------------- */
   const deleteTodo = (text) => {
     const todoIndex = todos.findIndex(todo => todo.text === text);
 
@@ -89,7 +100,6 @@ function App() {
   }
 
   return (
-
     <AppUI
       total={totalTodos}
       completed={completedTodos}

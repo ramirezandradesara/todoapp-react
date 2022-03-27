@@ -8,14 +8,14 @@ function TodoItem(props) {
     <li className="TodoItem">
       <span
         className={`Icon Icon-check ${props.completed && 'Icon-check--active'}`}
-        onClick={props.onComplete}
+        onClick={props.onComplete} // Si ponemos onComplete() se ejecuta apenas se refresque la página, no cuando se dispara el evento
       >
         √
       </span>
       <p className={`TodoItem-p ${props.completed && 'TodoItem-p--complete'}`}>
         {props.text}
       </p>
-      <span 
+      <span   
       className="Icon Icon-delete"
       onClick = {props.onDelete}
       >
