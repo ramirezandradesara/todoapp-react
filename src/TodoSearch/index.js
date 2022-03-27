@@ -1,8 +1,8 @@
 import React from 'react';
-import './TodoSearch.css';
 import { TodoContext } from '../TodoContext';
+import './TodoSearch.css';
 
-function TodoSearch() { // pasamos las props por paramentros, las definimos en variables
+function TodoSearch() { 
   const { searchValue, setSearchValue } = React.useContext(TodoContext);
 
   const onSearchValueChange = (event) => { // cuando haya un cambio en el input, llama a la funcion para actualizar el estado 
