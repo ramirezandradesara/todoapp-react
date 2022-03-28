@@ -6,11 +6,15 @@ const  TodoContext = React.createContext();
 function TodoProvider(props){ // va a envolver cualquier componente que pasemos por children
 
   /* ------------------------- VARIABLES ------------------------- */
-  const { item: todos, saveItem: saveTodos, loading, error } = useLocalStorage('todos', []); // llamamos al custom hook
+  const { 
+    item: todos, 
+    saveItem: saveTodos, 
+    loading, 
+    error 
+  } = useLocalStorage('todos', []); // llamamos al custom hook
 
-  /*   const [todos, saveTodos] = useLocalStorage('TODOS_V1', []) // usamos el hook, decimos donde guardar  */
   const [searchValue, setSearchValue] = React.useState(''); // van a ser utilizados en la funcion TodoSearch
-
+  const [openModal, setOpenModal] = React.useState(false); // va a ser utilizado en la funcion Modal
   const completedTodos = todos.filter(todo => !!todo.completed).length; // cant de ToDos completados, referencia del todos del estado
   const totalTodos = todos.length // cant de ToDos en total creados
 
@@ -66,6 +70,7 @@ function TodoProvider(props){ // va a envolver cualquier componente que pasemos 
     saveTodos(newTodos); // React hace el rerender
   };
 
+
 //value son los valores que queremos compartir
     return (
         <TodoContext.Provider value={{
@@ -78,10 +83,11 @@ function TodoProvider(props){ // va a envolver cualquier componente que pasemos 
             searchedTodos,
             completeTodo,
             deleteTodo,
+            openModal,
+            setOpenModal,
         }}> 
             {props.children} 
         </TodoContext.Provider>
-
     );
 }
 
