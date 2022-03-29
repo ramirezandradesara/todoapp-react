@@ -13,7 +13,7 @@ function TodoSearch() {
   return (
     <input
       className="TodoSearch"
-      placeholder="Cebolla"
+      placeholder="Buscar..."
       value={searchValue} // valor del Estado
       onChange={onSearchValueChange} // reacciona a los cambios del input, se ejecuta la funcion de actualización de estado
     />

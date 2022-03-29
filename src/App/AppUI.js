@@ -6,6 +6,7 @@ import { TodoItem } from '../TodoItem';
 import { CreateTodoButton } from '../CreateTodoButton'; // como no encuentra un archivo, buscar la carpeta llamada de esta manera. Y como no especificamos dentro de la carpeta que archivo, busca por defecto el llamado "index.js
 import { TodoContext } from '../TodoContext';
 import { Modal } from '../Modal';
+import { TodoForm } from '../TodoForm';
 
 function AppUI() {
     const {
@@ -43,7 +44,7 @@ function AppUI() {
             </TodoList>
 {openModal && (
     <Modal>
-        <p>{searchedTodos[0]?.text}</p>
+       <TodoForm />
     </Modal>
 )}
             <CreateTodoButton

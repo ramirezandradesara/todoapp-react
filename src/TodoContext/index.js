@@ -48,6 +48,16 @@ function TodoProvider(props){ // va a envolver cualquier componente que pasemos 
       completed: true,
     } */
   }
+  const addTodo = (text) => {
+
+    const newTodos = [...todos]; // copia de los ToDos
+    
+    newTodos.push({
+      completed: false,
+      text: text,
+    }); 
+    saveTodos(newTodos); // React hace el rerender
+  }
 
   /* ---------------------------- TOGGLE COMPLETADO --------------------------- */
 
@@ -78,10 +88,11 @@ function TodoProvider(props){ // va a envolver cualquier componente que pasemos 
             loading,
             totalTodos,
             completedTodos,
-            searchValue,// hacemos referencia a las consts de arriba ☝
+            searchValue,
             setSearchValue,
             searchedTodos,
             completeTodo,
+            addTodo,
             deleteTodo,
             openModal,
             setOpenModal,

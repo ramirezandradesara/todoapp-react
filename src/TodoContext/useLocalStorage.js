@@ -24,7 +24,7 @@ function useLocalStorage(itemName, initialValue) { // custom hook, avisa a react
         } catch (error) {
           setError(error)
         }
-      }, 2000); // para que no se ejecute el setState antes de que el componente se renderize 
+      }, 500); // para que no se ejecute el setState antes de que el componente se renderize 
     });
   
   
